@@ -7,20 +7,20 @@ const addTask = (params) => {
     let li = document.createElement("li")
     let removeButton = document.createElement("button")
     let UpButton = document.createElement("button")
-        //let DownButton = document.createElement("button")
+    let DownButton = document.createElement("button")
     let textNode = document.createTextNode(`${task}`)
     let span = document.createElement("span")
 
 
     removeButton.textContent = "Remove Task"
-        //DownButton.textContent = "Move Down"
+    DownButton.textContent = "Move Down"
     UpButton.textContent = "Move Up"
 
     li.appendChild(textNode)
     li.appendChild(span)
     li.appendChild(removeButton)
     li.appendChild(UpButton)
-        //li.appendChild(DownButton)
+    li.appendChild(DownButton)
 
     tasklist.appendChild(li)
 
@@ -34,18 +34,31 @@ const addTask = (params) => {
     })
 
     UpButton.addEventListener("click", (event) => {
-        // let ul = document.querySelector("#taskList")
-        // console.log('ul:', ul)
-        // console.log(ul.children);
-        // let li = event.target.parentNode //li element
-        // let listArray = Array.from(li.parentNode.children)
-        // let oldPosition = listArray.indexOf(li)
-        // ul.children[5]
+        let li = event.target.parentElement
+        let ul = li.parentNode // Liste 
+        let previousNode = li.previousSibling.previousSibling
+        if (previousNode === "null") {
+            previousNode = li.nextSibling
+        }
+        let toMoveNode = ul.removeChild(li)
+        ul.insertBefore(toMoveNode, previousNode)
+    })
+    DownButton.addEventListener("click", (event) => {
+        let li = event.target.parentElement
+        let ul = li.parentNode // Liste 
+        let nextNode = li.nextSibling.nextSibling
+
+        if (nextNode === "null") {
+            nextNode = nextNode.previousSibling
+        }
+        let toMoveNode = ul.removeChild(li)
+        ul.insertBefore(toMoveNode, nextNode)
     })
 
-    //Extra
-
+    document.querySelector("#taskInput").focus()
 }
+
+
 
 const removeLast = () => {
         let tasklist = document.querySelector("#taskList")
@@ -71,7 +84,7 @@ const getTasksAsArray = () => {
     for (const item of taskList) {
         taskArray.push(item.firstChild.textContent)
     }
-    console.log(taskArray)
+    // console.log(taskArray)
 }
 
 getTasksAsArray()
@@ -140,17 +153,43 @@ Window.onload = function() {
 
 Window.onload()
 
+const fillNodelistwithArray = (a) => {
+    let taskList = document.querySelector("#taskList").childNodes
+    let k = 0
+    for (let i = 0; i < taskList.length; i++) {
+        console.log('taskList[i]:', taskList[i])
+        if (taskList[i].nodeName === "LI") {
+            taskList[i].replaceChild(a[i], taskList[i])
+            k++
+        }
+    }
+}
 
-// array = [a, b, c, d, e, f]
 
-// const swop = (i) => {
-//     let changeElement array[i]
-//     for (let i = 0; i < array.length; i++) {
-//         const element = array[i];
+const bubbleSort = (a) => {
+    let newPeak = ""
+    do {
+        swapped = false
+        for (let i = 0; i < a.length; i++) {
+            if (i + 1 < a.length && a[i].firstChild.data > a[i + 1].firstChild.data) {
+                newPeak = a[i]
+                a[i] = a[i + 1]
+                a[i + 1] = newPeak
+                swapped = true
+            }
+        }
+    } while (swapped)
+    return fillNodelistwithArray(a)
+}
 
-//     }
-// }
+const getArrayTaskElements = () => {
+    let taskList = document.querySelector("#taskList").children
+    let taskArray = []
 
-// swop(6)
+    for (const item of taskList) {
+        taskArray.push(item)
+    }
+    taskArray = bubbleSort(taskArray)
+}
 
-console.log("taska" < "taskb");
+getArrayTaskElements()
