@@ -144,7 +144,7 @@ Window.onload = function() {
     }
 
     SortButton.onclick = function(event) {
-        bubblesort()
+        SortTaskList()
     }
 
 
@@ -154,15 +154,15 @@ Window.onload = function() {
 Window.onload()
 
 const fillNodelistwithArray = (a) => {
-    let taskList = document.querySelector("#taskList").childNodes
+    let taskList = document.querySelector("#taskList")
     let k = 0
     for (let i = 0; i < taskList.length; i++) {
-        console.log('taskList[i]:', taskList[i])
-        if (taskList[i].nodeName === "LI") {
-            taskList[i].replaceChild(a[i], taskList[i])
-            k++
-        }
+        taskList.removeChild(taskList.childNodes[i])
     }
+    for (let i = 0; i < a.length; i++) {
+        taskList.appendChild(a[i])
+    }
+
 }
 
 
@@ -182,7 +182,7 @@ const bubbleSort = (a) => {
     return fillNodelistwithArray(a)
 }
 
-const getArrayTaskElements = () => {
+const SortTaskList = () => {
     let taskList = document.querySelector("#taskList").children
     let taskArray = []
 
@@ -191,5 +191,3 @@ const getArrayTaskElements = () => {
     }
     taskArray = bubbleSort(taskArray)
 }
-
-getArrayTaskElements()
