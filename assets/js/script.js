@@ -36,21 +36,15 @@ const addTask = (params) => {
     UpButton.addEventListener("click", (event) => {
         let li = event.target.parentElement
         let ul = li.parentNode // Liste 
-        let previousNode = li.previousSibling.previousSibling
-        if (previousNode === "null") {
-            previousNode = li.nextSibling
-        }
+        let previousNode = li.previousElementSibling
+
         let toMoveNode = ul.removeChild(li)
         ul.insertBefore(toMoveNode, previousNode)
     })
     DownButton.addEventListener("click", (event) => {
         let li = event.target.parentElement
         let ul = li.parentNode // Liste 
-        let nextNode = li.nextSibling.nextSibling
-
-        if (nextNode === "null") {
-            nextNode = nextNode.previousSibling
-        }
+        let nextNode = li.nextElementSibling.nextElementSibling //two siblings further to insert after
         let toMoveNode = ul.removeChild(li)
         ul.insertBefore(toMoveNode, nextNode)
     })
@@ -95,15 +89,14 @@ getTasksAsArray()
       */
 
 const changeTaskBackgroundColor = (event) => {
-    let colorPicker = document.querySelector("#colorPicker")
-    let tasklist = document.querySelector("#taskList").children
-    for (const item of tasklist) {
-        item.style.backgroundColor = colorPicker.value
+        let colorPicker = document.querySelector("#colorPicker")
+        let tasklist = document.querySelector("#taskList").children
+        for (const item of tasklist) {
+            item.style.backgroundColor = colorPicker.value
+        }
+
     }
-
-}
-
-/* EXTRA */
+    /* EXTRA */
 
 /* EXERCISE 10: 
          Create a method "bubbleSort()" which sort the task list alphabetically using the bubble sort algorithm
@@ -114,12 +107,43 @@ const changeTaskBackgroundColor = (event) => {
          - Break the code into many function for semplicity 
          - Reuse the functions previously created
       */
-const bubblesort = (params) => {
-    console.log("test");
+const fillNodelistwithArray = (a) => {
+    let taskList = document.querySelector("#taskList")
+    let k = 0
+    for (let i = 0; i < taskList.length; i++) {
+        taskList.removeChild(taskList.childNodes[i])
+    }
+    for (let i = 0; i < a.length; i++) {
+        taskList.appendChild(a[i])
+    }
+
 }
 
+const bubbleSort = (a) => {
+    let newPeak = ""
+    do {
+        swapped = false
+        for (let i = 0; i < a.length; i++) {
+            if (i + 1 < a.length && a[i].firstChild.data > a[i + 1].firstChild.data) {
+                newPeak = a[i]
+                a[i] = a[i + 1]
+                a[i + 1] = newPeak
+                swapped = true
+            }
+        }
+    } while (swapped)
+    return fillNodelistwithArray(a)
+}
 
+const SortTaskList = () => {
+    let taskList = document.querySelector("#taskList").children
+    let taskArray = []
 
+    for (const item of taskList) {
+        taskArray.push(item)
+    }
+    taskArray = bubbleSort(taskArray)
+}
 
 Window.onload = function() {
     let AddTaskButton = document.querySelector("#addTask")
@@ -152,42 +176,3 @@ Window.onload = function() {
 }
 
 Window.onload()
-
-const fillNodelistwithArray = (a) => {
-    let taskList = document.querySelector("#taskList")
-    let k = 0
-    for (let i = 0; i < taskList.length; i++) {
-        taskList.removeChild(taskList.childNodes[i])
-    }
-    for (let i = 0; i < a.length; i++) {
-        taskList.appendChild(a[i])
-    }
-
-}
-
-
-const bubbleSort = (a) => {
-    let newPeak = ""
-    do {
-        swapped = false
-        for (let i = 0; i < a.length; i++) {
-            if (i + 1 < a.length && a[i].firstChild.data > a[i + 1].firstChild.data) {
-                newPeak = a[i]
-                a[i] = a[i + 1]
-                a[i + 1] = newPeak
-                swapped = true
-            }
-        }
-    } while (swapped)
-    return fillNodelistwithArray(a)
-}
-
-const SortTaskList = () => {
-    let taskList = document.querySelector("#taskList").children
-    let taskArray = []
-
-    for (const item of taskList) {
-        taskArray.push(item)
-    }
-    taskArray = bubbleSort(taskArray)
-}
